@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Искра</string>
+    <string name="widget_name">Искра — серия</string>
+    <string name="widget_desc">Твой питомец и серия дней</string>
+</resources>
