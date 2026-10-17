@@ -24,9 +24,18 @@ object PetRenderer {
 
     private class Pal(val edge: Int, val c0: Int, val c1: Int, val c2: Int, val c3: Int)
 
-    private val FIRE = Pal(0xFF7A1C10.toInt(), 0xFFE8521C.toInt(), 0xFFFF8C2A.toInt(), 0xFFFFD23F.toInt(), 0xFFFFF6C8.toInt())
     private val ASH = Pal(0xFF2A221F.toInt(), 0xFF5A4038.toInt(), 0xFF7A5040.toInt(), 0xFF9A6448.toInt(), 0xFFB07850.toInt())
-    private val WING = Pal(0xFF5E0F0F.toInt(), 0xFFC22A1A.toInt(), 0xFFE5571E.toInt(), 0xFFFF9A2E.toInt(), 0xFFFFCF5A.toInt())
+    private val SILHOUETTE = 0xFF3A2C27.toInt()
+
+    private fun pal(i: Int): Pal {
+        val f = Palettes.get(i)
+        return Pal(f.edge, f.c0, f.c1, f.c2, f.c3)
+    }
+
+    private fun wing(i: Int): Pal {
+        val f = Palettes.get(i)
+        return Pal(f.edge, f.edge, f.c0, f.c1, f.c2)
+    }
     private val EYE = 0xFF2B0F06.toInt()
     private val SHINE = 0xFFFFFFFF.toInt()
     private val BLUSH = 0xFFFF7A9A.toInt()
@@ -62,10 +71,12 @@ object PetRenderer {
         return (1f - max(nx, vy * 0.9f)).coerceIn(0f, 1f)
     }
 
-    fun buildGrid(stage: Int, mood: Mood, phase: Float): IntArray {
+    fun buildGrid(stage: Int, mood: Mood, phase: Float, palette: Int = 0, silhouette: Boolean = false): IntArray {
         val g = IntArray(G * G)
         val smolder = mood == Mood.SMOLDER
-        val pal = if (smolder) ASH else FIRE
+        val fire = pal(palette)
+        val body = if (smolder) ASH else fire
+        val wingPal = wing(palette)
         val cx = G / 2f
         val r: Float
         val h0: Float
@@ -101,7 +112,7 @@ object PetRenderer {
                 val top = cy - 1.5f - t * 6f - flap * t * 1.6f
                 val feather = if (x % 2 == 0) 1.2f else 0f
                 val bottom = cy + 3f - t * 3.5f + feather - flap * t * 1.2f
-                if (py in top..bottom) g[y * G + x] = shade(WING, 1f - t)
+                if (py in top..bottom) g[y * G + x] = shade(wingPal, 1f - t)
             }
         }
 
@@ -121,7 +132,7 @@ object PetRenderer {
                 val hh = flameHeat(x + 0.5f, y + 0.5f, p[0], p[1], p[2], p[3], p[4], p[5])
                 if (hh > best) best = hh
             }
-            if (best >= 0f) g[y * G + x] = shade(pal, best)
+            if (best >= 0f) g[y * G + x] = shade(body, best)
         }
 
         // Outline
@@ -132,7 +143,7 @@ object PetRenderer {
                 (x < G - 1 && g[y * G + x + 1] != 0) ||
                 (y > 0 && g[(y - 1) * G + x] != 0) ||
                 (y < G - 1 && g[(y + 1) * G + x] != 0)
-            if (n) out[y * G + x] = pal.edge
+            if (n) out[y * G + x] = body.edge
         }
 
         fun put(x: Int, y: Int, c: Int) {
@@ -199,8 +210,11 @@ object PetRenderer {
                 val t = ((phase * 0.7f + i * 2.1f) % 6.283f) / 6.283f
                 val sy = (top - t * 6f).toInt()
                 val sx = (cx + sin(phase * 1.3f + i * 2.4f) * (r + 1f)).toInt()
-                put(sx, sy, FIRE.c3)
+                put(sx, sy, fire.c3)
             }
+        }
+        if (silhouette) {
+            for (i in out.indices) if (out[i] != 0) out[i] = SILHOUETTE
         }
         return out
     }
@@ -208,18 +222,20 @@ object PetRenderer {
     fun draw(
         canvas: Canvas, left: Float, top: Float, size: Float,
         stage: Int, mood: Mood, phase: Float, glow: Boolean = false,
+        palette: Int = 0, silhouette: Boolean = false,
     ) {
         if (glow) {
             val gx = left + size / 2f
             val gy = top + size * 0.62f
             val rad = size * 0.55f
-            val col = if (mood == Mood.SMOLDER) 0x30FF6A2A else 0x60FF8C2A
+            val base = Palettes.get(palette).c1 and 0x00FFFFFF
+            val col = (if (mood == Mood.SMOLDER) 0x30000000 else 0x60000000) or base
             val gp = Paint().apply {
                 shader = RadialGradient(gx, gy, rad, col, 0, Shader.TileMode.CLAMP)
             }
             canvas.drawCircle(gx, gy, rad, gp)
         }
-        val grid = buildGrid(stage, mood, phase)
+        val grid = buildGrid(stage, mood, phase, palette, silhouette)
         val s = size / G
         val p = Paint().apply { isAntiAlias = false; style = Paint.Style.FILL }
         for (y in 0 until G) for (x in 0 until G) {
@@ -230,9 +246,9 @@ object PetRenderer {
         }
     }
 
-    fun bitmap(px: Int, stage: Int, mood: Mood, phase: Float = 0.6f): Bitmap {
+    fun bitmap(px: Int, stage: Int, mood: Mood, palette: Int = 0, phase: Float = 0.6f): Bitmap {
         val b = Bitmap.createBitmap(px, px, Bitmap.Config.ARGB_8888)
-        draw(Canvas(b), 0f, 0f, px.toFloat(), stage, mood, phase)
+        draw(Canvas(b), 0f, 0f, px.toFloat(), stage, mood, phase, palette = palette)
         return b
     }
 }
