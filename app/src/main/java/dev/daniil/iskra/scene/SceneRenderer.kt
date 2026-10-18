@@ -199,15 +199,15 @@ object SceneRenderer {
             path.addCircle(x + cw * 0.49f, y + ch * 0.42f, ch * 0.42f, Path.Direction.CW)
             path.addCircle(x + cw * 0.69f, y + ch * 0.56f, ch * 0.32f, Path.Direction.CW)
             path.addRoundRect(x + cw * 0.12f, y + ch * 0.52f, x + cw * 0.88f, y + ch * 0.9f, ch * 0.19f, ch * 0.19f, Path.Direction.CW)
-            val flat = Path()
-            flat.addRect(x - 2f, y - ch, x + cw + 2f, y + ch * 0.9f, Path.Direction.CW)
-            path.op(flat, Path.Op.INTERSECT)
             p.shader = LinearGradient(
                 0f, y, 0f, y + ch * 0.9f,
                 sky.cloud, Sky.lerpColor(sky.cloud, Sky.withAlpha(sky.mid, (sky.cloud ushr 24) / 255f), 0.12f),
                 Shader.TileMode.CLAMP,
             )
+            val save = c.save()
+            c.clipRect(x - 2f, y - ch, x + cw + 2f, y + ch * 0.9f)
             c.drawPath(path, p)
+            c.restoreToCount(save)
         }
     }
 

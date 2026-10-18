@@ -234,6 +234,19 @@ object Reminders {
         nm.cancel(ID_LAST)
     }
 
+    /** Sample notifications for screenshots. */
+    fun demo(ctx: Context, kind: String) {
+        val s = Repo.load(ctx)
+        val sm = Engine.summary(s, LocalDateTime.now())
+        if (kind == "task" || kind == "all") test(ctx)
+        if (kind == "evening" || kind == "all") notify(ctx, ID_EVENING, CH_DAILY, Texts.eveningTitle(sm), Texts.eveningText(sm), sm)
+        if (kind == "last" || kind == "all") notify(ctx, ID_LAST, CH_DAILY, Texts.lastTitle(sm), Texts.lastText(sm), sm)
+        if (kind == "morning" || kind == "all") {
+            val emojis = s.tasks.take(6).joinToString(" ") { it.emoji }
+            notify(ctx, ID_MORNING, CH_DAILY, Texts.morningTitle(), Texts.morningText(sm, emojis), sm)
+        }
+    }
+
     /** A sample notification from the settings screen. */
     fun test(ctx: Context) {
         val s = Repo.load(ctx)

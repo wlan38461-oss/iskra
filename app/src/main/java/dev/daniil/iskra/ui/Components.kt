@@ -70,10 +70,11 @@ fun PetSprite(
     glow: Float = 0f,
 ) {
     val clock = LocalClock.current
+    val sil = if (LocalUi.current.light) 0x30000000 else 0x3DFFFFFF
     Canvas(modifier.size(size)) {
         val ph = if (animated) clock.value * PHASE_SPEED else 0.6f
         drawIntoCanvas {
-            PetDraw.draw(it.nativeCanvas, 0f, 0f, this.size.minDimension, look, ph, glow, silhouette)
+            PetDraw.draw(it.nativeCanvas, 0f, 0f, this.size.minDimension, look, ph, glow, silhouette, sil)
         }
     }
 }

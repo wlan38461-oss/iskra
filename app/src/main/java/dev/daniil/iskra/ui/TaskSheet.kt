@@ -72,7 +72,7 @@ fun TaskSheet(
     var remind by remember { mutableIntStateOf(task?.remind ?: -1) }
     var lastTime by remember { mutableIntStateOf(if ((task?.remind ?: -1) >= 0) task!!.remind else defaultTime()) }
     var cat by remember {
-        mutableIntStateOf(Texts.emojiCats.indexOfFirst { emoji in it.items }.coerceAtLeast(0))
+        mutableIntStateOf(if (task == null) 0 else Texts.emojiCats.indexOfFirst { emoji in it.items }.coerceAtLeast(0))
     }
     val save: () -> Unit = {
         if (title.isNotBlank()) onSave(title.trim(), emoji, remind)

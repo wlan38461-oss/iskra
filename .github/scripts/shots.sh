@@ -72,8 +72,10 @@ shot settings_night --ez demo true --ei demo_minute 1380 --ei demo_tab 2 --ei de
 # --- add-task sheet and hatching
 shot sheet_day --ez demo true --ei demo_minute 840 --ei demo_tab 0 --ez demo_sheet true
 shot sheet_night --ez demo true --ei demo_minute 1380 --ei demo_tab 0 --ez demo_sheet true
-WAIT=2 shot hatch_shake --ez demo true --ei demo_minute 1235 --ei demo_tab 1 --ei demo_lit 3 --ez demo_hatch true
-sleep 3
+WAIT=4 shot hatch_shake --ez demo true --ei demo_minute 1235 --ei demo_tab 1 --ei demo_lit 3 --ez demo_hatch true
+sleep 1
+adb exec-out screencap -p > "$OUT/hatch_shake2.png"
+sleep 4
 adb exec-out screencap -p > "$OUT/hatch_done.png"
 
 # --- real app state for widgets and notifications (saved demo data)
@@ -108,7 +110,7 @@ EOF
 }
 
 for kind in today pet strip; do
-  adb shell am start -n $ACT --es demo_pin $kind > /dev/null 2>&1
+  adb shell am start -W -n $ACT --es demo_pin $kind > /dev/null 2>&1
   sleep 3
   adb exec-out screencap -p > "$OUT/pin_dialog_$kind.png"
   xy=$(tap_node '^(add|add to home screen|add automatically|добавить)$')
@@ -137,7 +139,7 @@ sleep 6
 adb exec-out screencap -p > "$OUT/home_widgets_day.png"
 
 # notifications
-adb shell am start -n $ACT --es demo_notify task > /dev/null 2>&1
+adb shell am start -W -n $ACT --es demo_notify all > /dev/null 2>&1
 sleep 3
 adb shell am broadcast -a dev.daniil.iskra.ALARM -n $PKG/.reminder.ReminderReceiver > /dev/null 2>&1
 sleep 2

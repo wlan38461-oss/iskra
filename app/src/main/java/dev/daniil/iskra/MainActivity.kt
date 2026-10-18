@@ -121,6 +121,12 @@ class MainActivity : ComponentActivity() {
         setContent { App(demo, launch) }
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        intent.getStringExtra("demo_pin")?.let { pin(it) }
+        intent.getStringExtra("demo_notify")?.let { demoNotify(it) }
+    }
+
     private fun demoFrom(i: Intent): DemoConfig? {
         if (!i.getBooleanExtra("demo", false)) return null
         val minute = i.getIntExtra("demo_minute", 12 * 60)
@@ -153,7 +159,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun demoNotify(kind: String) {
-        if (kind == "task") Reminders.test(this)
+        Reminders.demo(this, kind)
     }
 }
 

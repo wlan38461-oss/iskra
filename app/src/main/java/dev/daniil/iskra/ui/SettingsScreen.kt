@@ -170,7 +170,7 @@ fun SettingsScreen(model: AppModel, list: LazyListState) {
         item {
             Pad {
                 CardBox(padding = 14.dp) {
-                    WidgetRow(R.drawable.preview_pet, "Питомец", "костёр, серия и прогресс дня · 2×2") {
+                    WidgetRow(R.drawable.preview_pet, "Питомец", "костёр, серия и прогресс дня · 2×2", square = true) {
                         pinWidget(ctx, IskraWidgetReceiver::class.java)
                     }
                     Spacer(Modifier.height(12.dp))
@@ -494,8 +494,42 @@ private fun ReminderRow(
 }
 
 @Composable
-private fun WidgetRow(res: Int, title: String, sub: String, onAdd: () -> Unit) {
+private fun AddPill(onAdd: () -> Unit) {
     val ui = LocalUi.current
+    Text(
+        "Добавить",
+        color = ui.onAccent,
+        fontSize = 14.sp,
+        fontWeight = FontWeight.ExtraBold,
+        modifier = Modifier
+            .clip(RoundedCornerShape(50))
+            .background(Brush.horizontalGradient(listOf(ui.accent2, ui.accent)))
+            .clickable(onClick = onAdd)
+            .padding(horizontal = 16.dp, vertical = 9.dp),
+    )
+}
+
+@Composable
+private fun WidgetRow(res: Int, title: String, sub: String, square: Boolean = false, onAdd: () -> Unit) {
+    val ui = LocalUi.current
+    if (square) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                painter = painterResource(res),
+                contentDescription = title,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.size(132.dp).clip(RoundedCornerShape(22.dp)),
+            )
+            Spacer(Modifier.width(14.dp))
+            Column(Modifier.weight(1f)) {
+                Text(title, color = ui.text, fontSize = 16.sp, fontWeight = FontWeight.ExtraBold)
+                Text(sub, color = ui.dim, fontSize = 13.sp, fontWeight = FontWeight.SemiBold, lineHeight = 17.sp)
+                Spacer(Modifier.height(10.dp))
+                AddPill(onAdd)
+            }
+        }
+        return
+    }
     Column {
         Image(
             painter = painterResource(res),
@@ -509,17 +543,7 @@ private fun WidgetRow(res: Int, title: String, sub: String, onAdd: () -> Unit) {
                 Text(title, color = ui.text, fontSize = 16.sp, fontWeight = FontWeight.ExtraBold)
                 Text(sub, color = ui.dim, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
             }
-            Text(
-                "Добавить",
-                color = ui.onAccent,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.ExtraBold,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(50))
-                    .background(Brush.horizontalGradient(listOf(ui.accent2, ui.accent)))
-                    .clickable(onClick = onAdd)
-                    .padding(horizontal = 16.dp, vertical = 9.dp),
-            )
+            AddPill(onAdd)
         }
     }
 }

@@ -139,7 +139,7 @@ private fun TasksHero(model: AppModel) {
         SceneCanvas(sky, Modifier.fillMaxSize()) { t, d ->
             SceneRenderer.Opts(
                 mode = SceneRenderer.HERO, time = t, density = d, sheet = sheet,
-                horizon = 0.8f, arcTop = 0.2f, arcFrom = 0.56f, arcTo = 0.98f, stars = 55, celestialSize = 0.85f,
+                horizon = 0.8f, arcTop = 0.2f, arcFrom = 0.68f, arcTo = 0.97f, stars = 55, celestialSize = 0.85f,
             )
         }
         Column(Modifier.statusBarsPadding().padding(start = 20.dp, end = 20.dp, top = 14.dp)) {

@@ -39,6 +39,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.nativeCanvas
@@ -85,7 +86,7 @@ fun HatchDialog(palette: Int, startName: String, autoPlay: Boolean = true, onDon
         Box(
             Modifier
                 .fillMaxSize()
-                .background(Brush.radialGradient(listOf(ui.accent.copy(alpha = 0.45f), Color(0xF20B0A16)), radius = 1400f)),
+                .background(Brush.radialGradient(listOf(lerp(Color(0xFF0B0A16), ui.accent, 0.4f), Color(0xFF0B0A16)), radius = 1400f)),
             contentAlignment = Alignment.Center,
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(24.dp)) {
@@ -97,14 +98,20 @@ fun HatchDialog(palette: Int, startName: String, autoPlay: Boolean = true, onDon
                         val k = v / 0.6f
                         val amp = 4f + 22f * k * k
                         val ang = sin(t * (18f + 30f * k)) * amp
-                        rotate(ang, Offset(s / 2f, s * 0.92f)) {
-                            drawIntoCanvas { c -> PetDraw.draw(c.nativeCanvas, 0f, 0f, s, egg, t * PHASE_SPEED, 1f) }
+                        val big = s * 1.15f
+                        rotate(ang, Offset(s / 2f, s * 0.95f)) {
+                            drawIntoCanvas { c ->
+                                PetDraw.draw(c.nativeCanvas, (s - big) / 2f, s * 0.95f - big * 0.922f, big, egg, t * PHASE_SPEED, 1f)
+                            }
                         }
                     } else {
                         val k = ((v - 0.6f) / 0.25f).coerceIn(0f, 1f)
                         val pop = if (k < 1f) 0.3f + 0.9f * k - 0.2f * k * k else 1f
-                        scale(pop, Offset(s / 2f, s * 0.92f)) {
-                            drawIntoCanvas { c -> PetDraw.draw(c.nativeCanvas, 0f, 0f, s, baby, t * PHASE_SPEED, 1f) }
+                        val big = s * 1.75f
+                        scale(pop, Offset(s / 2f, s * 0.95f)) {
+                            drawIntoCanvas { c ->
+                                PetDraw.draw(c.nativeCanvas, (s - big) / 2f, s * 0.95f - big * 0.922f, big, baby, t * PHASE_SPEED, 1f)
+                            }
                         }
                     }
                     if (v >= 0.6f && v < 1f) {

@@ -18,9 +18,10 @@ object PetDraw {
         phase: Float,
         glow: Float = 0f,
         silhouette: Boolean = false,
+        silColor: Int = PetGrid.SILHOUETTE,
     ) {
         if (glow > 0f && !silhouette) drawGlow(canvas, left, top, size, look, glow)
-        val grid = PetGrid.build(look, phase, silhouette)
+        val grid = PetGrid.build(look, phase, silhouette, silColor)
         val g = PetGrid.G
         val s = size / g
         val angle = if (silhouette) 0f else PetGrid.eggWobble(look, phase)

@@ -60,7 +60,7 @@ object Texts {
                 val left = Growth.HATCH - sm.lit
                 "До вылупления: $left ${days(left)}"
             }
-            next == null -> "Феникс растёт: ${sm.lit} ${days(sm.lit)} горения"
+            next == null -> "Высшая форма · ${sm.lit} ${days(sm.lit)} горения"
             else -> "До формы «${next.first}»: ${next.second} ${days(next.second)}"
         }
     }

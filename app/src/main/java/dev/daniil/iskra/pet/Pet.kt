@@ -68,10 +68,10 @@ object PetGrid {
         return sin(phase * 2.6f) * amp * burst
     }
 
-    fun build(look: PetLook, phase: Float, silhouette: Boolean = false): IntArray {
+    fun build(look: PetLook, phase: Float, silhouette: Boolean = false, silColor: Int = SILHOUETTE): IntArray {
         val out = if (look.form <= 0) egg(look, phase) else flame(look, phase)
         if (silhouette) {
-            for (i in out.indices) if (out[i] != 0) out[i] = SILHOUETTE
+            for (i in out.indices) if (out[i] != 0) out[i] = silColor
         }
         return out
     }

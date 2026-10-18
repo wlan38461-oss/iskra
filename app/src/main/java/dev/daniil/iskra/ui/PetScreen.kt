@@ -139,7 +139,7 @@ private fun PetHero(model: AppModel) {
             SceneRenderer.Opts(
                 mode = SceneRenderer.FULL, time = t, density = d, look = look, logs = logs,
                 petScale = bounce.value, petPhase = t * PHASE_SPEED,
-                horizon = 0.6f, groundY = 0.765f, petSize = 0.33f, arcTop = 0.24f, stars = 80,
+                horizon = 0.6f, groundY = 0.765f, petSize = 0.33f, arcTop = 0.32f, stars = 80,
             )
         }
         Column(Modifier.statusBarsPadding().padding(start = 20.dp, end = 20.dp, top = 14.dp)) {
