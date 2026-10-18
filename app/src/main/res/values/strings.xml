@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Искра</string>
-    <string name="widget_name">Искра — серия</string>
-    <string name="widget_desc">Твой питомец и серия дней</string>
+    <string name="widget_pet">Искра — питомец</string>
+    <string name="widget_pet_desc">Костёр с питомцем, серия и прогресс дня</string>
+    <string name="widget_today">Искра — дела</string>
+    <string name="widget_today_desc">Дела на сегодня: отмечай прямо с рабочего стола</string>
+    <string name="widget_strip">Искра — серия</string>
+    <string name="widget_strip_desc">Огонёк, серия, неделя и прогресс дня</string>
 </resources>

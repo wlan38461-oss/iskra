@@ -12,8 +12,8 @@ android {
         applicationId = "dev.daniil.iskra"
         minSdk = 26
         targetSdk = 34
-        versionCode = 2
-        versionName = "1.1"
+        versionCode = 3
+        versionName = "2.0"
     }
 
     signingConfigs {
@@ -56,4 +56,6 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material-icons-core")
     implementation("androidx.glance:glance-appwidget:1.1.0")
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+    testImplementation("junit:junit:4.13.2")
 }
