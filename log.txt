@@ -1,0 +1,9 @@
+Performing Streamed Install
+Success
+Physical size: 1080x2400
+Physical density: 420
+pin today -> 831 2253
+pin pet -> 831 2253
+pin strip -> 831 2253
+widget tap -> 708 605
+done
