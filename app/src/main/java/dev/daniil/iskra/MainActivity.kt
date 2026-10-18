@@ -185,11 +185,19 @@ fun App(demo: DemoConfig?, launch: Launch) {
         }
     }
 
-    // one clock for all animations
+    // one clock for all animations, ~30 fps is plenty for pixel art and saves battery
     val clock = remember { mutableFloatStateOf(0f) }
     LaunchedEffect(Unit) {
         val start = withFrameNanos { it }
-        while (true) withFrameNanos { clock.floatValue = (it - start) / 1_000_000_000f }
+        var last = 0L
+        while (true) {
+            withFrameNanos {
+                if (it - last >= 33_000_000L) {
+                    last = it
+                    clock.floatValue = (it - start) / 1_000_000_000f
+                }
+            }
+        }
     }
 
     // ask for notifications once

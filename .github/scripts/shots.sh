@@ -14,6 +14,7 @@ adb shell settings put system screen_off_timeout 1800000
 adb shell svc power stayon true
 adb shell input keyevent KEYCODE_WAKEUP
 adb shell wm dismiss-keyguard || true
+adb shell settings put global hide_error_dialogs 1
 adb shell settings put global window_animation_scale 0.5
 adb shell settings put global transition_animation_scale 0.5
 adb install -r -g "$APK" >> "$OUT/log.txt" 2>&1
@@ -113,6 +114,8 @@ for kind in today pet strip; do
   adb shell am start -W -n $ACT --es demo_pin $kind > /dev/null 2>&1
   sleep 3
   adb exec-out screencap -p > "$OUT/pin_dialog_$kind.png"
+  w=$(tap_node '^wait$')
+  if [ -n "$w" ]; then adb shell input tap $w; sleep 2; fi
   xy=$(tap_node '^(add|add to home screen|add automatically|добавить)$')
   log "pin $kind -> $xy"
   if [ -n "$xy" ]; then adb shell input tap $xy; fi
